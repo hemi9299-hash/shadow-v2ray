@@ -1,14 +1,10 @@
-FROM teddysun/v2ray:latest
+FROM alpine:latest
 
-# Expose the correct container port (8080)
-EXPOSE 8080
+# تثبيت برنامج tinyproxy الخفيف
+RUN apk add --no-cache tinyproxy
 
-# Copy the VLESS config into the container
-COPY config.json /etc/v2ray/config.json
+# نسخ ملف الإعدادات إلى مكانه داخل الحاوية
+COPY tinyproxy.conf /etc/tinyproxy/tinyproxy.conf
 
-# Run V2Ray with the config file
-CMD ["v2ray", "run", "-config", "/etc/v2ray/config.json"]
-
-
-# join telegram https://t.me/ragnarservers  for new updates 
-# my telegram username is @Not_Ragnar
+# تشغيل البروكسي (Foreground mode) ليعمل مع Cloud Run
+CMD ["tinyproxy", "-d"]
